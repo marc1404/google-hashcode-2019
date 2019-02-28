@@ -4,9 +4,9 @@ const exportFile = require("./export.js");
 const paths = [
     'a_example.txt',
     'b_lovely_landscapes.txt',
-    'c_memorable_moments.txt',
-    'd_pet_pictures.txt',
-    'e_shiny_selfies.txt',
+    //'c_memorable_moments.txt',
+    //'d_pet_pictures.txt',
+    //'e_shiny_selfies.txt',
 ];
 
 for (const path of paths) {
@@ -129,6 +129,30 @@ function run(path) {
                 verticalSlide = new Slide();
             }
         }
+    }
+
+    let head = slides[0];
+    const chain = [ head ];
+    const queue = [ ...slides ];
+
+    while (queue.length > 0) {
+        let bestIndex = null;
+        let bestSlide = null;
+        let highestInterest = -1;
+
+        for (let i = 0; i++; i < queue.length) {
+            const slide = queue[i];
+            const interest = head.calculateInterestFactor(slide);
+
+            if (interest > highestInterest) {
+                bestIndex = i;
+                bestSlide = slide;
+                highestInterest = interest;
+            }
+        }
+
+        chain.push(bestSlide);
+        queue.splice(bestIndex, 1);
     }
 
     exportFile(slides, path);
