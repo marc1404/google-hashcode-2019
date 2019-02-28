@@ -5,6 +5,7 @@ class Slide {
         this.id = nextSlideId++;
         this.images = [];
         this.isIncluded = false;
+        this.tags = null;
     }
 
     addImage(image) {
@@ -68,6 +69,10 @@ class Slide {
     }
 
     getTags() {
+        if (this.tags) {
+            return this.tags;
+        }
+
         const tags = new Set();
 
         for (const image of this.images) {
@@ -76,7 +81,9 @@ class Slide {
             }
         }
 
-        return Array.from(tags);
+        this.tags = Array.from(tags);
+
+        return this.tags;
     }
 }
 
