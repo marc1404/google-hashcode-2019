@@ -1,5 +1,5 @@
-const fs = require("fs");
 const exportFile = require("./export.js");
+const readFile = require("./import.js");
 
 const paths = [
     'a_example.txt',
@@ -15,15 +15,6 @@ for (const path of paths) {
 
 function run(path) {
     let nextSlideId = 0;
-
-    class Image {
-        constructor(id, orientation, tags) {
-            this.id = id;
-            this.orientation = orientation;
-            this.numberOfTags = tags.length;
-            this.tags = tags;
-        }
-    }
 
     class Slide {
         constructor() {
@@ -119,24 +110,24 @@ function run(path) {
         return tagMap;
     }
 
-    function readFile(path) {
-        const content = fs.readFileSync(path, "utf8");
-        const lines = content.split("\n");
-        const images = [];
-        let nextImageId = 0;
+    // function readFile(path) {
+    //     const content = fs.readFileSync(path, "utf8");
+    //     const lines = content.split("\n");
+    //     const images = [];
+    //     let nextImageId = 0;
 
-        for (let line of lines) {
-            line = line.replace("\r", "");
-            let lineSplitted = line.split(" ");
+    //     for (let line of lines) {
+    //         line = line.replace("\r", "");
+    //         let lineSplitted = line.split(" ");
 
-            if(lineSplitted[1] !== undefined) {
-                const orientation = lineSplitted[0].toLowerCase();
-                const image = new Image(nextImageId++, orientation, lineSplitted.slice(2, lineSplitted.length));
+    //         if(lineSplitted[1] !== undefined) {
+    //             const orientation = lineSplitted[0].toLowerCase();
+    //             const image = new Image(nextImageId++, orientation, lineSplitted.slice(2, lineSplitted.length));
 
-                images.push(image);
-            }
-        }
+    //             images.push(image);
+    //         }
+    //     }
 
-        return images;
-    }
+    //     return images;
+    // }
 };
