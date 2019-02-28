@@ -1,4 +1,5 @@
 const fs = require("fs");
+const exportFile = require("./export.js");
 
 const paths = [
     'a_example.txt',
@@ -94,7 +95,7 @@ function run(path) {
         }
     }
 
-    exportFile(slides);
+    exportFile(slides, path);
 
     function createTagMap(slides) {
         const tagMap = new Map();
@@ -137,19 +138,5 @@ function run(path) {
         }
 
         return images;
-    }
-
-    function exportFile(slides) {
-        console.log(`Exporting ${path}...`);
-        let fileContent = "";
-
-        fileContent += slides.length + "\r\n";
-
-        for (const slide of slides) {
-            fileContent += slide.images.map(image => image.id).join(' ');
-            fileContent += "\r\n";
-        }
-
-        fs.writeFileSync('./submissions/' + path + '.submission.txt', fileContent);
     }
 };
