@@ -27,6 +27,42 @@ function run(path) {
             this.images.push(image);
         }
 
+        calculateInterestFactor(slide) {
+            const a = this;
+            const b = slide;
+            let common = 0;
+            let notInA = 0;
+            let notInB = 0;
+            const aTags = a.getTags();
+            const bTags = b.getTags();
+            const aMap = new Map();
+            const bMap = new Map();
+
+            for (const tag of aTags) {
+                aMap.set(tag, true);
+            }
+
+            for (const tag of bTags) {
+                bMap.set(tag, true);
+            }
+
+            for (const tag of aTags) {
+                if (bMap.has(tag)) {
+                    common++;
+                } else {
+                    notInB++;
+                }
+            }
+
+            for (const tag of bTags) {
+                if (!aMap.has(tag)) {
+                    notInA++;
+                }
+            }
+
+            return Math.min(common, notInA, notInB);
+        }
+
         isFull() {
             let numberOfVerticals = 0;
 
