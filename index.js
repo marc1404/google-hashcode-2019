@@ -1,6 +1,7 @@
 const exportFile = require("./export.js");
 const readFile = require("./import.js");
 const Slide = require("./slide.js");
+const createTagMap = require('./createTagMap');
 
 const paths = [
     'a_example.txt',
@@ -41,55 +42,7 @@ function run(path) {
         }
     }
 
-    let head = slides[0];
-    const queue = slides.slice(1);
-    const chain = [ head ];
-
-    while (queue.length > 0) {
-        let bestIndex = null;
-        let bestSlide = null;
-        let highestInterest = -1;
-
-        for (let i = 0; i < queue.length; i++) {
-            const slide = queue[i];
-            const interest = head.calculateInterestFactor(slide);
-
-            if (interest > highestInterest) {
-                bestIndex = i;
-                bestSlide = slide;
-                highestInterest = interest;
-            }
-        }
-
-        head = bestSlide;
-
-        chain.push(bestSlide);
-        queue.splice(bestIndex, 1);
-        console.log(queue.length);
-    }
+    exportFile(slides, path);
 
 
-    exportFile(chain, path);
-
-    function createTagMap(slides) {
-        const tagMap = new Map();
-
-        for (const slide of slides) {
-            const tags = slide.getTags();
-
-            for (const tag of tags) {
-                let set = tagMap.get(tag);
-
-                if (!set) {
-                    set = new Set();
-
-                    tagMap.set(tag, set);
-                }
-
-                set.add(slide.id);
-            }
-        }
-
-        return tagMap;
-    }
 };
