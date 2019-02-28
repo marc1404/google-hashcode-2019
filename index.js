@@ -1,5 +1,6 @@
 const exportFile = require("./export.js");
 const readFile = require("./import.js");
+const Slide = require("./slide.js");
 
 const paths = [
     'a_example.txt',
@@ -14,88 +15,6 @@ for (const path of paths) {
 }
 
 function run(path) {
-    let nextSlideId = 0;
-
-    class Slide {
-        constructor() {
-            this.id = nextSlideId++;
-            this.images = [];
-            this.isIncluded = false;
-        }
-
-        addImage(image) {
-            this.images.push(image);
-        }
-
-        calculateInterestFactor(slide) {
-            const a = this;
-            const b = slide;
-            let common = 0;
-            let notInA = 0;
-            let notInB = 0;
-            const aTags = a.getTags();
-            const bTags = b.getTags();
-            const aMap = new Map();
-            const bMap = new Map();
-
-            for (const tag of aTags) {
-                aMap.set(tag, true);
-            }
-
-            for (const tag of bTags) {
-                bMap.set(tag, true);
-            }
-
-            for (const tag of aTags) {
-                if (bMap.has(tag)) {
-                    common++;
-                } else {
-                    notInB++;
-                }
-            }
-
-            for (const tag of bTags) {
-                if (!aMap.has(tag)) {
-                    notInA++;
-                }
-            }
-
-            return Math.min(common, notInA, notInB);
-        }
-
-        isFull() {
-            let numberOfVerticals = 0;
-
-            for (const image of this.images) {
-                if (image.orientation === 'h') {
-                    return true;
-                }
-
-                if (image.orientation === 'v') {
-                    numberOfVerticals++;
-
-                    if (numberOfVerticals === 2) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        getTags() {
-            const tags = new Set();
-
-            for (const image of this.images) {
-                for (const tag of image.tags) {
-                    tags.add(tag);
-                }
-            }
-
-            return Array.from(tags);
-        }
-    }
-
     const images = readFile(path);
     const slides = [];
     const slideMap = new Map();
