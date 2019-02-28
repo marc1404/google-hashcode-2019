@@ -42,7 +42,7 @@ function run(path) {
         }
     }
 
+    const tagMap = createTagMap(slides);
+
     exportFile(slides, path);
-
-
-};
+}
