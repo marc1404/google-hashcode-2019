@@ -92,7 +92,7 @@ function run(path) {
                 }
             }
 
-            return Array.from(tags.toArray());
+            return Array.from(tags);
         }
     }
 
@@ -123,15 +123,15 @@ function run(path) {
     }
 
     let head = slides[0];
+    const queue = slides.slice(1);
     const chain = [ head ];
-    const queue = [ ...slides ];
 
     while (queue.length > 0) {
         let bestIndex = null;
         let bestSlide = null;
         let highestInterest = -1;
 
-        for (let i = 0; i++; i < queue.length) {
+        for (let i = 0; i < queue.length; i++) {
             const slide = queue[i];
             const interest = head.calculateInterestFactor(slide);
 
@@ -149,7 +149,8 @@ function run(path) {
         console.log(queue.length);
     }
 
-    exportFile(slides, path);
+
+    exportFile(chain, path);
 
     function createTagMap(slides) {
         const tagMap = new Map();
