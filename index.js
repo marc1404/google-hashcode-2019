@@ -71,27 +71,27 @@ function run(path) {
     const images = readFile(path);
     const slides = [];
     const slideMap = new Map();
+    let verticalSlide = new Slide();
 
     for (const image of images) {
         if (image.orientation === 'h') {
-            
-        }
-    }
+            const slide = new Slide();
 
-    let currentSlide = createSlide();
-
-    for (const image of verticalImages) {
-        if (currentSlide.isFull()) {
-            currentSlide = createSlide();
+            slide.addImage(image);
+            slides.push(slide);
+            slideMap.set(slide.id, slide);
         }
 
-        currentSlide.addImage(image);
-    }
+        if (image.orientation === 'v') {
+            verticalSlide.addImage(image);
 
-    for (const image of horizontalImages) {
-        const slide = createSlide();
+            if (verticalSlide.isFull()) {
+                slides.push(verticalSlide);
+                slideMap.set(verticalSlide.id, verticalSlide);
 
-        slide.addImage(image);
+                verticalSlide = new Slide();
+            }
+        }
     }
 
     exportFile(slides);
@@ -116,15 +116,6 @@ function run(path) {
         }
 
         return tagMap;
-    }
-
-    function createSlide() {
-        const slide = new Slide();
-
-        slides.push(slide);
-        slideMap.set(slide.id, slide);
-
-        return slide;
     }
 
     function readFile(path) {
@@ -159,6 +150,6 @@ function run(path) {
             fileContent += "\r\n";
         }
 
-        fs.writeFileSync(path + '.submission.txt', fileContent);
+        fs.writeFileSync('./submissions/' + path + '.submission.txt', fileContent);
     }
 };
