@@ -13,7 +13,7 @@ module.exports = (path) => {
 
         if(lineSplitted[1] !== undefined) {
             const orientation = lineSplitted[0].toLowerCase();
-            const image = new Image(nextImageId++, orientation, lineSplitted.slice(2, lineSplitted.length));
+            const image = new Image(nextImageId++, orientation, lineSplitted.slice(2));
 
             images.push(image);
         }
