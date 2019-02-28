@@ -142,8 +142,11 @@ function run(path) {
             }
         }
 
+        head = bestSlide;
+
         chain.push(bestSlide);
         queue.splice(bestIndex, 1);
+        console.log(queue.length);
     }
 
     exportFile(slides, path);
