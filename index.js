@@ -6,9 +6,9 @@ const createTagMap = require('./createTagMap');
 const paths = [
     'a_example.txt',
     'b_lovely_landscapes.txt',
-    //'c_memorable_moments.txt',
-    //'d_pet_pictures.txt',
-    //'e_shiny_selfies.txt',
+    'c_memorable_moments.txt',
+    'd_pet_pictures.txt',
+    'e_shiny_selfies.txt',
 ];
 
 for (const path of paths) {
@@ -18,8 +18,7 @@ for (const path of paths) {
 function run(path) {
     const images = readFile(path);
     const slides = [];
-    const slideMap = new Map();
-    let verticalSlide = new Slide();
+    let verticalImages = [];
 
     for (const image of images) {
         if (image.orientation === 'h') {
@@ -27,22 +26,76 @@ function run(path) {
 
             slide.addImage(image);
             slides.push(slide);
-            slideMap.set(slide.id, slide);
         }
 
         if (image.orientation === 'v') {
-            verticalSlide.addImage(image);
+            verticalImages.push(image);
+        }
+    }
 
-            if (verticalSlide.isFull()) {
-                slides.push(verticalSlide);
-                slideMap.set(verticalSlide.id, verticalSlide);
+    while (verticalImages.length > 0) {
+        if (verticalImages.length === 1) {
+            break;
+        }
 
-                verticalSlide = new Slide();
+        const head = verticalImages[0];
+        const tail = verticalImages.slice(1);
+        let found = false;
+
+        for (let i = 0; i < tail.length && i < 100; i++) {
+            const image = tail[i];
+
+            if (!head.hasMatchingTags(image)) {
+                const slide = new Slide();
+
+                if (!head.used && !image.used) {
+                    head.used = true;
+                    image.used = true;
+
+                    slide.addImage(head);
+                    slide.addImage(image);
+                    slides.push(slide);
+                    verticalImages.splice(i + 1, 1);
+
+                    found = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            const image = tail[0];
+            const slide = new Slide();
+
+            if (!head.used && !image.used) {
+                head.used = true;
+                image.used = true;
+
+                slide.addImage(head);
+                slide.addImage(image);
+                slides.push(slide);
+                verticalImages.splice(1, 1);
             }
         }
     }
 
     const tagMap = createTagMap(slides);
+    const slideshow = [];
+    const values = Array.from(tagMap.values());
+    const sorted = values.sort((a, b) => {
+        return b.length - a.length;
+    });
 
-    exportFile(slides, path);
+    for (const slides of sorted) {
+        for (const slide of slides) {
+            if (!slide.isIncluded) {
+                slide.isIncluded = true;
+
+                slideshow.push(slide);
+            }
+        }
+    }
+
+    exportFile(slideshow, path);
 }

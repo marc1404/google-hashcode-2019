@@ -5,15 +5,15 @@ module.exports = function createTagMap(slides) {
         const tags = slide.getTags();
 
         for (const tag of tags) {
-            let set = tagMap.get(tag);
+            let slides = tagMap.get(tag);
 
-            if (!set) {
-                set = new Set();
+            if (!slides) {
+                slides = [];
 
-                tagMap.set(tag, set);
+                tagMap.set(tag, slides);
             }
 
-            set.add(slide.id);
+            slides.push(slide);
         }
     }
 
